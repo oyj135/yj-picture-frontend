@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, h, ref } from 'vue'
-import { HomeOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons-vue'
+import { HomeOutlined, LogoutOutlined } from '@ant-design/icons-vue'
 import type { MenuProps } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
@@ -76,16 +76,6 @@ const doLogout = async () => {
   }
 }
 
-// 跳转到个人主页
-const goToUserProfile = () => {
-  const userId = loginUserStore.loginUser.id
-  if (userId) {
-    router.push(`/user/profile/${userId}`)
-  } else {
-    message.warning('请先登录')
-  }
-}
-
 </script>
 
 <template>
@@ -119,15 +109,10 @@ const goToUserProfile = () => {
               </ASpace>
               <template #overlay>
                 <a-menu>
-                  <a-menu-item @click="goToUserProfile">
-                    <UserOutlined />
-                    个人主页
-                  </a-menu-item>
                   <a-menu-item @click="doLogout">
                     <LogoutOutlined />
                     退出登录
                   </a-menu-item>
-                  
                 </a-menu>
               </template>
             </a-dropdown>
