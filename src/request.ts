@@ -3,9 +3,7 @@ import { message } from 'ant-design-vue'
 
 // 创建 Axios 实例
 const myAxios = axios.create({
-
-    // 在vite.config.ts中配置了代理后要为 空 才会转发， 仅限于开发环境使用
-  baseURL: 'http://localhost:8123',
+  baseURL: 'http://localhost:8123/api',
   timeout: 60000,
   withCredentials: true,
 })

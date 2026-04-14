@@ -6,10 +6,11 @@ import { ref } from 'vue'
  * 存储登录用户信息的状态
  */
 export const useLoginUserStore = defineStore('loginUser', () => {
-  const loginUser = ref<any>({
+  const loginUser = ref<API.LoginUserVO>({
     userName: '未登录',
   })
 
+  // 获取登录用户信息
   async function fetchLoginUser() {
     const res = await getLoginUser();
     if (res.data.code === 0 && res.data.data) {
@@ -18,7 +19,7 @@ export const useLoginUserStore = defineStore('loginUser', () => {
   }
 
   // 设置登录用户信息
-  function setLoginUser(newLoginUser: any) {
+  function setLoginUser(newLoginUser: API.LoginUserVO) {
     loginUser.value = newLoginUser
   }
 
