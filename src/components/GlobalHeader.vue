@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, h, ref } from 'vue'
-import { HomeOutlined, LogoutOutlined } from '@ant-design/icons-vue'
+import { HomeOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons-vue'
 import type { MenuProps } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
@@ -19,9 +19,19 @@ const originItems = [
     title: '主页',
   },
   {
+    key: '/add_picture',
+    label: '创建图片',
+    title: '创建图片',
+  },
+  {
     key: '/admin/userManage',
     label: '用户管理',
     title: '用户管理',
+  },
+  {
+    key: '/admin/pictureManage',
+    label: '图片管理',
+    title: '图片管理',
   },
   {
     key: 'others',
@@ -75,7 +85,6 @@ const doLogout = async () => {
     message.error('退出登录失败，' + res.data.message)
   }
 }
-
 </script>
 
 <template>
@@ -104,7 +113,15 @@ const doLogout = async () => {
           <div v-if="loginUserStore.loginUser.id">
             <a-dropdown>
               <ASpace>
-                <a-avatar :src="loginUserStore.loginUser.userAvatar" :alt="loginUserStore.loginUser.userName" />
+                <a-avatar
+                  :src="loginUserStore.loginUser.userAvatar"
+                  :alt="loginUserStore.loginUser.userName"
+                >
+                  <!-- {{ (loginUserStore.loginUser.userName || 'U').charAt(0).toUpperCase() }} -->
+                  <template #icon>
+                    <UserOutlined />
+                  </template>
+                </a-avatar>
                 {{ loginUserStore.loginUser.userName ?? '无名' }}
               </ASpace>
               <template #overlay>
