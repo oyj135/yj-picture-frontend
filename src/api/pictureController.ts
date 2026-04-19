@@ -86,6 +86,21 @@ export async function listPictureVoByPage(
   })
 }
 
+/** 此处后端没有提供注释 POST /picture/review */
+export async function doPictureReview(
+  body: API.PictureReviewRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseBoolean>('/picture/review', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** 此处后端没有提供注释 GET /picture/tag_category */
 export async function listPictureTagCategory(options?: { [key: string]: any }) {
   return request<API.BaseResponsePictureTagCategory>('/picture/tag_category', {
@@ -125,6 +140,36 @@ export async function uploadPicture(
       ...params,
       pictureUploadRequest: undefined,
       ...params['pictureUploadRequest'],
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** 此处后端没有提供注释 POST /picture/upload/batch */
+export async function uploadPictureByBatch(
+  body: API.PictureUploadByBatchRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseInteger>('/picture/upload/batch', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** 此处后端没有提供注释 POST /picture/upload/url */
+export async function uploadPictureByUrl(
+  body: API.PictureUploadRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponsePictureVO>('/picture/upload/url', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
     data: body,
     ...(options || {}),
