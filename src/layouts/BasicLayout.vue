@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import GlobalHeader from '@/components/GlobalHeader.vue';
+import GlobalHeader from '@/components/GlobalHeader.vue'
+import GlobalSider from '@/components/GlobalSider.vue'
 </script>
 
 <template>
@@ -10,10 +11,14 @@ import GlobalHeader from '@/components/GlobalHeader.vue';
         <GlobalHeader />
       </a-layout-header>
 
-      <!-- 中间内容 -->
-      <a-layout-content class="content">
-        <router-view />
-      </a-layout-content>
+      <!-- 左侧菜单 -->
+      <a-layout>
+        <GlobalSider class="sider" />
+        <!-- 中间内容 -->
+        <a-layout-content class="content">
+          <router-view />
+        </a-layout-content>
+      </a-layout>
 
       <!-- 底部 -->
       <a-layout-footer class="footer">
@@ -26,9 +31,9 @@ import GlobalHeader from '@/components/GlobalHeader.vue';
 <style lang="scss" scoped>
 #basicLayout .header {
   padding-inline: 20px;
-  margin-bottom: 16px;
   color: unset;
   background: white;
+  margin-bottom: 1px;
 }
 
 #basicLayout .footer {
@@ -44,6 +49,17 @@ import GlobalHeader from '@/components/GlobalHeader.vue';
 #basicLayout .content {
   background: linear-gradient(to right, #fefefe, #fff);
   margin-bottom: 28px;
-  padding: 20px;
+  padding: 28px;
+}
+
+#basicLayout .sider {
+  background: #fff;
+  border-right: 0.5px solid #eee;
+  padding-top: 20px;
+}
+
+#basicLayout :deep(.ant-menu-root) {
+  border-bottom: none !important;
+  border-inline-end: none !important;
 }
 </style>

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { deletePicture, getPictureVoById } from '@/api/pictureController'
-import router from '@/router'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
 import { downloadImage, formatSize } from '@/utils'
 import { message } from 'ant-design-vue'
 import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 interface Props {
   id: string | number
@@ -34,6 +34,8 @@ onMounted(() => {
   fetchPictureDetail()
 })
 
+const router = useRouter()
+
 const loginUserStore = useLoginUserStore()
 // 是否具有编辑权限
 const canEdit = computed(() => {
@@ -48,7 +50,13 @@ const canEdit = computed(() => {
 })
 // 编辑
 const doEdit = () => {
-  router.push('/add_picture?id=' + picture.value.id)
+  router.push({
+    path: '/add_picture',
+    query: {
+      id: picture.value.id,
+      spaceId: picture.value.spaceId,
+    },
+  })
 }
 // 删除
 const doDelete = async () => {

@@ -34,6 +34,11 @@ const originItems = [
     title: '图片管理',
   },
   {
+    key: '/admin/spaceManage',
+    label: '空间管理',
+    title: '空间管理',
+  },
+  {
     key: 'others',
     label: h('a', { href: 'https://blog.ouyangjian.com', target: '_blank' }, 'My Blog'),
     title: 'My Blog',
@@ -126,6 +131,12 @@ const doLogout = async () => {
               </ASpace>
               <template #overlay>
                 <a-menu>
+                  <a-menu-item>
+                    <router-link to="/my_space">
+                      <UserOutlined />
+                      我的空间
+                    </router-link>
+                  </a-menu-item>
                   <a-menu-item @click="doLogout">
                     <LogoutOutlined />
                     退出登录
