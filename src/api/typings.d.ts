@@ -159,6 +159,7 @@ declare namespace API {
   type Picture = {
     id?: number
     url?: string
+    thumbnailUrl?: string
     name?: string
     introduction?: string
     category?: string
@@ -243,6 +244,7 @@ declare namespace API {
   type PictureVO = {
     id?: number
     url?: string
+    thumbnailUrl?: string
     name?: string
     introduction?: string
     tags?: string[]
