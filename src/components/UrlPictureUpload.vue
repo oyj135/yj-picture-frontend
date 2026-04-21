@@ -68,11 +68,16 @@ const handleUpload = async () => {
 .url-picture-upload img {
   max-width: 100%;
   max-height: 480px;
+  border-radius: 12px;
 }
 
 .url-picture-upload .img-wrapper {
   text-align: center;
   margin-top: 16px;
   margin-bottom: 16px;
+  padding: 12px;
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+  background: #fafcff;
 }
 </style>

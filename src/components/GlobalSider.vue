@@ -59,13 +59,16 @@ router.afterEach((to, from, next) => {
   background: none;
 }
 
-.title {
-  color: black;
-  font-size: 18px;
-  margin-left: 16px;
+#globalSider :deep(.ant-layout-sider-children) {
+  border-radius: 12px;
 }
 
-.logo {
-  height: 48px;
+#globalSider :deep(.ant-menu) {
+  background: transparent;
+}
+
+#globalSider :deep(.ant-menu-item) {
+  margin: 6px 10px;
+  border-radius: 8px;
 }
 </style>

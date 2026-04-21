@@ -30,36 +30,54 @@ import GlobalSider from '@/components/GlobalSider.vue'
 
 <style lang="scss" scoped>
 #basicLayout .header {
-  padding-inline: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 72px;
+  line-height: 72px;
+  padding-inline: 24px;
   color: unset;
-  background: white;
-  margin-bottom: 1px;
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
 }
 
 #basicLayout .footer {
-  background: #efefef;
-  padding: 16px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  background: transparent;
+  padding: 16px 0 20px;
   text-align: center;
+  color: var(--text-secondary);
 }
 
 #basicLayout .content {
-  background: linear-gradient(to right, #fefefe, #fff);
-  margin-bottom: 28px;
-  padding: 28px;
+  min-height: calc(100vh - 140px);
+  margin: 16px 16px 0;
+  padding: 8px;
 }
 
 #basicLayout .sider {
-  background: #fff;
-  border-right: 0.5px solid #eee;
-  padding-top: 20px;
+  margin: 16px 0 0 16px;
+  border-right: none;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  padding-top: 12px;
+  overflow: hidden;
 }
 
 #basicLayout :deep(.ant-menu-root) {
   border-bottom: none !important;
   border-inline-end: none !important;
+}
+
+@media (max-width: 992px) {
+  #basicLayout .content {
+    margin: 12px;
+    padding: 0;
+  }
+
+  #basicLayout .sider {
+    margin: 12px 0 0 12px;
+  }
 }
 </style>

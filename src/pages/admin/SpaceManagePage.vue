@@ -115,17 +115,16 @@ const doDelete = async (id: number) => {
 </script>
 
 <template>
-  <div id="userManagePage">
-    <a-flex justify="space-between">
-      <h2>空间管理</h2>
+  <div id="spaceManagePage" class="page-container">
+    <a-flex justify="space-between" class="header-row">
+      <h2 class="page-title">空间管理</h2>
       <a-space>
         <a-button type="primary" href="/add_space" target="_blank">+ 创建空间</a-button>
       </a-space>
     </a-flex>
 
-    <div style="margin-bottom: 16px"></div>
     <!-- 搜索表单 -->
-    <a-form layout="inline" :model="searchParams" @finish="doSearch">
+    <a-form layout="inline" :model="searchParams" @finish="doSearch" class="search-form">
       <a-form-item label="空间名称" name="spaceName">
         <a-input v-model:value="searchParams.spaceName" placeholder="请输入空间名称" allow-clear />
       </a-form-item>
@@ -146,7 +145,6 @@ const doDelete = async (id: number) => {
       </a-form-item>
     </a-form>
 
-    <div style="margin-bottom: 16px"></div>
     <!-- 数据表格 -->
     <a-table
       :columns="columns"
@@ -183,4 +181,31 @@ const doDelete = async (id: number) => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+#spaceManagePage {
+  padding: 20px;
+}
+
+.header-row {
+  margin-bottom: 16px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.search-form {
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: #fafcff;
+}
+
+#spaceManagePage :deep(.ant-table-wrapper) {
+  border-radius: 12px;
+  overflow: hidden;
+}
+</style>

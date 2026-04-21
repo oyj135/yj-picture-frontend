@@ -63,24 +63,29 @@ const handleSubmit = async (values: any) => {
 
 <style scoped>
 #userLoginPage {
+  margin-top: 42px;
   max-width: 360px;
-  margin: 0 auto;
+  padding: 24px 22px 8px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
 }
 
 .title {
   text-align: center;
   margin-bottom: 16px;
+  color: var(--text-main);
 }
 
 .desc {
   text-align: center;
-  color: #bbb;
-  margin-bottom: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
 }
 
 .tips {
   margin-bottom: 16px;
-  color: #bbb;
+  color: var(--text-secondary);
   font-size: 13px;
   text-align: right;
 }

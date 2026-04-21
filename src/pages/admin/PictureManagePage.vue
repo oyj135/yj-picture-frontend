@@ -155,18 +155,17 @@ const handleReview = async (record: API.Picture, reviewStatus: number) => {
 </script>
 
 <template>
-  <div id="userManagePage">
-    <a-flex justify="space-between">
-      <h2>图片管理</h2>
+  <div id="pictureManagePage" class="page-container">
+    <a-flex justify="space-between" class="header-row">
+      <h2 class="page-title">图片管理</h2>
       <a-space>
         <a-button type="primary" href="/add_picture" target="_blank">+ 创建图片</a-button>
         <a-button type="primary" href="/add_picture/batch" target="_blank" ghost>+ 批量创建图片</a-button
         >
       </a-space>
     </a-flex>
-    <div style="margin-bottom: 16px"></div>
     <!-- 搜索表单 -->
-    <a-form layout="inline" :model="searchParams" @finish="doSearch">
+    <a-form layout="inline" :model="searchParams" @finish="doSearch" class="search-form">
       <a-form-item label="关键词" name="searchText">
         <a-input
           v-model:value="searchParams.searchText"
@@ -201,7 +200,6 @@ const handleReview = async (record: API.Picture, reviewStatus: number) => {
       </a-form-item>
     </a-form>
 
-    <div style="margin-bottom: 16px"></div>
     <!-- 数据表格 -->
     <a-table
       :columns="columns"
@@ -275,4 +273,31 @@ const handleReview = async (record: API.Picture, reviewStatus: number) => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+#pictureManagePage {
+  padding: 20px;
+}
+
+.header-row {
+  margin-bottom: 16px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.search-form {
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: #fafcff;
+}
+
+#pictureManagePage :deep(.ant-table-wrapper) {
+  border-radius: 12px;
+  overflow: hidden;
+}
+</style>

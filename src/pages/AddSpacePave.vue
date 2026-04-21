@@ -132,7 +132,21 @@ onMounted(() => {
 
 <style scoped>
 #addspacePage {
-  max-width: 720px;
+  max-width: 820px;
   margin: 0 auto;
+  padding: 20px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+#addspacePage :deep(.ant-card) {
+  margin-top: 8px;
+  border-radius: 12px;
+  border-color: var(--border-color);
+}
+
+#addspacePage :deep(.ant-form-item-label > label) {
+  color: var(--text-secondary);
 }
 </style>

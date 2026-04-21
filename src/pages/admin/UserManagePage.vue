@@ -113,9 +113,9 @@ const doDelete = async (id: number) => {
 </script>
 
 <template>
-  <div id="userManagePage">
+  <div id="userManagePage" class="page-container">
     <!-- 搜索表单 -->
-    <a-form layout="inline" :model="searchParams" @finish="doSearch">
+    <a-form layout="inline" :model="searchParams" @finish="doSearch" class="search-form">
       <a-form-item label="账号">
         <a-input v-model:value="searchParams.userAccount" placeholder="输入账号" />
       </a-form-item>
@@ -126,7 +126,6 @@ const doDelete = async (id: number) => {
         <a-button type="primary" html-type="submit">搜索</a-button>
       </a-form-item>
     </a-form>
-    <div style="margin-bottom: 16px;"></div>
     <!-- 数据表格 -->
     <a-table
       :columns="columns"
@@ -157,4 +156,21 @@ const doDelete = async (id: number) => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+#userManagePage {
+  padding: 20px;
+}
+
+.search-form {
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: #fafcff;
+}
+
+#userManagePage :deep(.ant-table-wrapper) {
+  border-radius: 12px;
+  overflow: hidden;
+}
+</style>

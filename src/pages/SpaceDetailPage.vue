@@ -114,7 +114,7 @@ const onColorChange = async (color: string) => {
   loading.value = true
   const res = await searchPictureByColor({
     picColor: color,
-    spaceId: props.id,
+    spaceId: spaceId,
   })
   if (res.data.code === 0 && res.data.data) {
     const data = res.data.data ?? []
@@ -140,14 +140,13 @@ const doBatchEdit = () => {
     batchEditPictureModalRef.value.openModal()
   }
 }
-
 </script>
 
 <template>
-  <div id="spaceDetailPage">
+  <div id="spaceDetailPage" class="page-container">
     <!-- 空间信息 -->
-    <a-flex justify="space-between">
-      <h2>{{ space.spaceName }}（私有空间）</h2>
+    <a-flex justify="space-between" class="header-row">
+      <h2 class="page-title">{{ space.spaceName }}（私有空间）</h2>
       <a-space size="middle">
         <a-button type="primary" :href="`/add_picture?spaceId=${id}`" target="_blank">
           + 创建图片
@@ -163,10 +162,9 @@ const doBatchEdit = () => {
     <!-- 搜索表单 -->
     <PictureSearchForm :onSearch="onSearch" />
     <!-- 按颜色搜索 -->
-    <a-form-item label="按颜色搜索" style="margin-top: 16px">
+    <a-form-item label="按颜色搜索" class="color-filter">
       <color-picker format="hex" @pureColorChange="onColorChange" />
     </a-form-item>
-    <div style="margin-bottom: 16px"></div>
     <!-- 图片列表 -->
     <PictureList :dataList="dataList" :loading="loading" :show-op="true" :onReload="reloadAll" />
     <!-- 分页 -->
@@ -187,4 +185,36 @@ const doBatchEdit = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+#spaceDetailPage {
+  padding: 20px;
+}
+
+.header-row {
+  margin-bottom: 12px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.color-filter {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: #fafcff;
+}
+
+#spaceDetailPage :deep(.ant-form-item-label > label) {
+  color: var(--text-secondary);
+}
+
+#spaceDetailPage :deep(.ant-pagination) {
+  margin-top: 18px;
+}
+</style>

@@ -93,17 +93,17 @@ const doShare = () => {
 </script>
 
 <template>
-  <div id="pictureDetailPage">
+  <div id="pictureDetailPage" class="page-container">
     <a-row :gutter="[16, 16]">
       <!-- 图片展示区 -->
       <a-col :sm="24" :md="16" :xl="18">
-        <a-card title="图片预览">
-          <a-image style="max-height: 600px; object-fit: contain" :src="picture.url" />
+        <a-card title="图片预览" class="preview-card">
+          <a-image class="preview-image" :src="picture.url" />
         </a-card>
       </a-col>
       <!-- 图片信息区 -->
       <a-col :sm="24" :md="8" :xl="6">
-        <a-card title="图片信息">
+        <a-card title="图片信息" class="info-card">
           <a-descriptions :column="1">
             <a-descriptions-item label="作者">
               <a-space>
@@ -184,8 +184,32 @@ const doShare = () => {
         </a-card>
       </a-col>
     </a-row>
-    <ShareModal ref="shareModalRef" :link="shareLink" />
+    <ShareModal ref="shareModalRef" title="分享图片" :link="shareLink" />
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+#pictureDetailPage {
+  padding: 20px;
+}
+
+.preview-card,
+.info-card {
+  border-radius: 12px;
+  border-color: var(--border-color);
+}
+
+.preview-image {
+  width: 100%;
+  max-height: 620px;
+  object-fit: contain;
+}
+
+#pictureDetailPage :deep(.ant-card-head-title) {
+  font-weight: 600;
+}
+
+#pictureDetailPage :deep(.ant-descriptions-item-label) {
+  color: var(--text-secondary);
+}
+</style>

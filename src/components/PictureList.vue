@@ -9,10 +9,10 @@
       <template #renderItem="{ item: picture }">
         <a-list-item style="padding: 0">
           <!-- 单张图片 -->
-          <a-card hoverable @click="doClickPicture(picture)">
+          <a-card class="picture-card" hoverable @click="doClickPicture(picture)">
             <template #cover>
               <img
-                style="height: 180px; object-fit: cover"
+                class="picture-cover"
                 :alt="picture.name"
                 :src="picture.thumbnailUrl ?? picture.url"
                 loading="lazy"
@@ -20,11 +20,11 @@
             </template>
             <a-card-meta :title="picture.name">
               <template #description>
-                <a-flex>
-                  <a-tag color="green">
+                <a-flex wrap :gap="8" class="tag-wrap">
+                  <a-tag color="green" class="category-tag">
                     {{ picture.category ?? '默认' }}
                   </a-tag>
-                  <a-tag v-for="tag in picture.tags" :key="tag">
+                  <a-tag v-for="tag in picture.tags" :key="tag" class="normal-tag">
                     {{ tag }}
                   </a-tag>
                 </a-flex>
@@ -40,7 +40,7 @@
         </a-list-item>
       </template>
     </a-list>
-    <ShareModal ref="shareModalRef" :link="shareLink" />
+    <ShareModal ref="shareModalRef" title="分享图片" :link="shareLink" />
   </div>
 </template>
 
@@ -71,14 +71,14 @@ const props = withDefaults(defineProps<Props>(), {
 
 // 跳转至图片详情
 const router = useRouter()
-const doClickPicture = (picture) => {
+const doClickPicture = (picture: API.PictureVO) => {
   router.push({
     path: `/picture/${picture.id}`,
   })
 }
 
 // 编辑
-const doEdit = (picture, e) => {
+const doEdit = (picture: API.PictureVO, e: Event) => {
   // 阻止冒泡
   e.stopPropagation()
   router.push({
@@ -91,7 +91,7 @@ const doEdit = (picture, e) => {
 }
 
 // 删除
-const doDelete = async (picture, e) => {
+const doDelete = async (picture: API.PictureVO, e: Event) => {
   e.stopPropagation()
   const id = picture.id
   if (!id) {
@@ -101,14 +101,14 @@ const doDelete = async (picture, e) => {
   if (res.data.code === 0) {
     message.success('删除成功')
     // 让外层刷新
-    props?.onReload()
+    props.onReload?.()
   } else {
     message.error('删除失败')
   }
 }
 
 // 搜索
-const doSearch = (picture, e) => {
+const doSearch = (picture: API.PictureVO, e: Event) => {
   e.stopPropagation()
   window.open(`/search_picture?pictureId=${picture.id}`)
 }
@@ -116,7 +116,7 @@ const doSearch = (picture, e) => {
 // 分享弹窗引用
 const shareModalRef = ref()
 // 分享链接
-const shareLink = ref<string>()
+const shareLink = ref<string>('')
 
 // 分享
 const doShare = (picture: API.PictureVO, e: Event) => {
@@ -129,4 +129,83 @@ const doShare = (picture: API.PictureVO, e: Event) => {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.picture-list {
+  width: 100%;
+}
+
+.picture-card {
+  overflow: hidden;
+  border: 1px solid #edf1f7;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.picture-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+}
+
+.picture-cover {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background: #f3f4f6;
+}
+
+.tag-wrap {
+  margin-top: 4px;
+}
+
+.category-tag {
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+.normal-tag {
+  border-radius: 999px;
+  color: #4b5563;
+  background: #f5f7fb;
+  border-color: #e5eaf3;
+}
+
+.picture-list :deep(.ant-card-meta-title) {
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.picture-list :deep(.ant-card-body) {
+  padding: 14px 14px 10px;
+}
+
+.picture-list :deep(.ant-card-actions) {
+  background: #fafbfe;
+  border-top: 1px solid #eef2f8;
+}
+
+.picture-list :deep(.ant-card-actions > li) {
+  margin: 8px 0;
+}
+
+.picture-list :deep(.ant-card-actions .anticon) {
+  color: #6b7280;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.picture-list :deep(.ant-card-actions .anticon:hover) {
+  color: #1677ff;
+  transform: scale(1.08);
+}
+
+@media (max-width: 768px) {
+  .picture-card {
+    border-radius: 10px;
+  }
+
+  .picture-cover {
+    height: 170px;
+  }
+}
+</style>

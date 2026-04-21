@@ -102,11 +102,15 @@ const handleUpload = async ({ file }: any) => {
   height: 100% !important;
   min-height: 152px;
   min-width: 152px;
+  border-radius: 12px;
+  background: #fafcff;
+  border-color: var(--border-color);
 }
 
 .picture-upload img {
   max-width: 100%;
   max-height: 480px;
+  border-radius: 12px;
 }
 
 .ant-upload-select-picture-card i {
@@ -116,6 +120,6 @@ const handleUpload = async ({ file }: any) => {
 
 .ant-upload-select-picture-card .ant-upload-text {
   margin-top: 8px;
-  color: #666;
+  color: var(--text-secondary);
 }
 </style>

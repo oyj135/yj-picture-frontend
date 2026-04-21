@@ -162,18 +162,47 @@ const doLogout = async () => {
 </template>
 
 <style scoped>
+#globalHeader {
+  height: 100%;
+}
+
+#globalHeader :deep(.ant-row) {
+  height: 100%;
+  align-items: center;
+}
+
 .title-bar {
   display: flex;
   align-items: center;
 }
 
 .title {
-  color: black;
-  font-size: 18px;
-  margin-left: 16px;
+  color: var(--text-main);
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 12px;
 }
 
 .logo {
-  height: 48px;
+  height: 40px;
+}
+
+.user-login-status {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#globalHeader :deep(.ant-menu) {
+  background: transparent;
+  border-bottom: none;
+}
+
+#globalHeader :deep(.ant-menu-horizontal > .ant-menu-item) {
+  border-radius: 8px;
+  margin-inline: 4px;
+}
+
+#globalHeader :deep(.ant-space) {
+  color: var(--text-main);
 }
 </style>

@@ -80,7 +80,8 @@ onMounted(() => {
 const doClear = () => {
   // 取消所有对象的值
   Object.keys(searchParams).forEach((key) => {
-    searchParams[key] = undefined
+    const typedKey = key as keyof API.PictureQueryRequest
+    searchParams[typedKey] = undefined
   })
   dateRange.value = []
   props.onSearch?.(searchParams)
@@ -157,5 +158,16 @@ const doClear = () => {
 <style scoped>
 #pictrueSearchForm .ant-form-item {
   margin-top: 16px;
+}
+
+#pictrueSearchForm {
+  padding: 14px 16px 4px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: #fff;
+}
+
+#pictrueSearchForm :deep(.ant-form-item-label > label) {
+  color: var(--text-secondary);
 }
 </style>

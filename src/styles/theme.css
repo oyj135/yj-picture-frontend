@@ -1,0 +1,48 @@
+:root {
+  --app-bg: #f4f7fb;
+  --card-bg: #ffffff;
+  --text-main: #1f2937;
+  --text-secondary: #6b7280;
+  --border-color: #e9edf5;
+  --primary-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --radius-lg: 14px;
+  --radius-md: 10px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text-main);
+  background: radial-gradient(circle at top, #f8faff 0%, var(--app-bg) 62%);
+}
+
+a {
+  color: #1677ff;
+}
+
+.page-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--card-bg);
+  box-shadow: var(--primary-shadow);
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 14px;
+    border-radius: var(--radius-md);
+  }
+}
