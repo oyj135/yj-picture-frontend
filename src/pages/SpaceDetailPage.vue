@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { listPictureVoByPage } from '@/api/pictureController'
 import PictureList from '@/components/PictureList.vue'
+import PictureSearchForm from '@/components/PictrueSearchForm.vue'
 import { getSpaceVoById } from '@/api/spaceController'
 import { formatSize } from '@/utils'
 import { message } from 'ant-design-vue'
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 interface Props {
   id: string | number
@@ -12,12 +13,25 @@ interface Props {
 
 const props = defineProps<Props>()
 const space = ref<API.SpaceVO>({})
+const spaceId = props.id as number
+const spaceUsagePercent = computed(() => {
+  const totalSize = Number(space.value.totalSize ?? 0)
+  const maxSize = Number(space.value.maxSize ?? 0)
+  if (!maxSize || Number.isNaN(totalSize) || Number.isNaN(maxSize)) {
+    return 0
+  }
+  const percent = (totalSize * 100) / maxSize
+  if (percent > 0 && percent < 1) {
+    return 1
+  }
+  return Number(Math.min(100, percent).toFixed(2))
+})
 
 // 获取空间详情
 const fetchSpaceDetail = async () => {
   try {
     const res = await getSpaceVoById({
-      id: props.id,
+      id: spaceId,
     })
     if (res.data.code === 0 && res.data.data) {
       space.value = res.data.data
@@ -39,7 +53,7 @@ const total = ref(0)
 const loading = ref(true)
 
 // 搜索条件
-const searchParams = reactive<API.PictureQueryRequest>({
+const searchParams = ref<API.PictureQueryRequest>({
   current: 1,
   pageSize: 12,
   sortField: 'createTime',
@@ -51,8 +65,8 @@ const fetchData = async () => {
   loading.value = true
   // 转换搜索参数
   const params = {
-    spaceId: props.id,
-    ...searchParams,
+    spaceId: spaceId,
+    ...searchParams.value,
   }
   const res = await listPictureVoByPage(params)
   if (res.data.data) {
@@ -73,9 +87,24 @@ onMounted(() => {
 
 // 分页参数
 const onPageChange = (page: number, pageSize: number) => {
-  searchParams.current = page
-  searchParams.pageSize = pageSize
+  searchParams.value.current = page
+  searchParams.value.pageSize = pageSize
   fetchData()
+}
+
+// 搜索
+const onSearch = (newSearchParams: API.PictureQueryRequest) => {
+  searchParams.value = {
+    ...searchParams.value,
+    ...newSearchParams,
+    current: 1,
+  }
+  fetchData()
+}
+
+// 同步刷新图片列表和空间统计，确保占用空间实时变化
+const reloadAll = async () => {
+  await Promise.all([fetchData(), fetchSpaceDetail()])
 }
 </script>
 
@@ -93,15 +122,17 @@ const onPageChange = (page: number, pageSize: number) => {
         >
           <a-progress
             type="circle"
-            :percent="space.totalSize && space.maxSize ? ((space.totalSize * 100) / space.maxSize).toFixed(1) : 0"
+            :percent="spaceUsagePercent"
             :size="42"
           />
         </a-tooltip>
       </a-space>
     </a-flex>
+    <!-- 搜索表单 -->
+    <PictureSearchForm :onSearch="onSearch" />
     <div style="margin-bottom: 16px;"></div>
     <!-- 图片列表 -->
-    <PictureList :dataList="dataList" :loading="loading" :show-op="true" :onReload="fetchData" />
+    <PictureList :dataList="dataList" :loading="loading" :show-op="true" :onReload="reloadAll" />
     <!-- 分页 -->
     <a-pagination
       style="text-align: right"

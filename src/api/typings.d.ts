@@ -277,6 +277,8 @@ declare namespace API {
     reviewerId?: number
     spaceId?: number
     nullSpaceId?: boolean
+    startEditTime?: string
+    endEditTime?: string
   }
 
   type PictureReviewRequest = {
