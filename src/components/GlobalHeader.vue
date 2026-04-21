@@ -137,6 +137,12 @@ const doLogout = async () => {
                       我的空间
                     </router-link>
                   </a-menu-item>
+                  <a-menu-item>
+                    <router-link to="/profile">
+                      <UserOutlined />
+                      个人简介
+                    </router-link>
+                  </a-menu-item>
                   <a-menu-item @click="doLogout">
                     <LogoutOutlined />
                     退出登录

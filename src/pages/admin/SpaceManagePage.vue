@@ -1,15 +1,8 @@
 <script setup lang="ts">
-import { deleteUser } from '@/api/userController'
+import { deleteSpace, listSpaceByPage } from '@/api/spaceController'
 import { message } from 'ant-design-vue'
-import { computed, h, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import dayjs from 'dayjs'
-import { doPictureReview, listPictureByPage } from '@/api/pictureController'
-import {
-  PIC_REVIEW_STATUS_ENUM,
-  PIC_REVIEW_STATUS_MAP,
-  PIC_REVIEW_STATUS_OPTIONS,
-} from '@/constants/picture'
-import { listSpaceByPage } from '@/api/spaceController'
 import { SPACE_LEVEL_MAP, SPACE_LEVEL_OPTIONS } from '@/constants/space'
 import { formatSize } from '@/utils'
 
@@ -110,7 +103,7 @@ const doDelete = async (id: number) => {
   if (!id) {
     return
   }
-  const res = await deleteUser({ id })
+  const res = await deleteSpace({ id })
   if (res.data.code === 0) {
     message.success('删除成功')
     // 刷新数据
