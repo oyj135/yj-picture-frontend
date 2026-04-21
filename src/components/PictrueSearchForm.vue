@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { listPictureTagCategory } from '@/api/pictureController'
+import { listPictureTagCategory, searchPictureByColor } from '@/api/pictureController'
 import dayjs from 'dayjs'
 
 interface Props {
@@ -143,9 +143,6 @@ const doClear = () => {
       </a-form-item>
       <a-form-item label="格式" name="picFormat">
         <a-input v-model:value="searchParams.picFormat" placeholder="请输入格式" allow-clear />
-      </a-form-item>
-      <a-form-item>
-        <a-button type="primary" html-type="submit" style="width: 96px">搜索</a-button>
       </a-form-item>
       <a-form-item>
         <a-space>

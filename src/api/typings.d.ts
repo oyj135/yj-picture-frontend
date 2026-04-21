@@ -11,6 +11,18 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponseListImageSearchResult = {
+    code?: number
+    data?: ImageSearchResult[]
+    message?: string
+  }
+
+  type BaseResponseListPictureVO = {
+    code?: number
+    data?: PictureVO[]
+    message?: string
+  }
+
   type BaseResponseListSpaceLevel = {
     code?: number
     data?: SpaceLevel[]
@@ -135,6 +147,11 @@ declare namespace API {
     id: number
   }
 
+  type ImageSearchResult = {
+    thumbUrl?: string
+    fromUrl?: string
+  }
+
   type LoginUserVO = {
     id?: number
     userAccount?: string
@@ -245,6 +262,15 @@ declare namespace API {
     reviewerId?: number
     reviewTime?: string
     spaceId?: number
+    picColor?: string
+  }
+
+  type PictureEditByBatchRequest = {
+    pictureIdList?: number[]
+    spaceId?: number
+    category?: string
+    tags?: string[]
+    nameRule?: string
   }
 
   type PictureEditRequest = {
@@ -332,6 +358,16 @@ declare namespace API {
     updateTime?: string
     user?: UserVO
     spaceId?: number
+    picColor?: string
+  }
+
+  type SearchPictureByColorRequest = {
+    picColor?: string
+    spaceId?: number
+  }
+
+  type SearchPictureByPictureRequest = {
+    pictureId?: number
   }
 
   type Space = {
