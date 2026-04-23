@@ -64,10 +64,11 @@ const handleUpload = async ({ file }: any) => {
     // 根据 typings.d.ts，uploadPictureParams 需要包含 pictureUploadRequest 对象
     const params: API.uploadPictureParams = {
       pictureUploadRequest: {
-        id: props.picture?.id
+        id: props.picture?.id,
+        spaceId: props.spaceId
       }
     }
-    params.spaceId = props.spaceId;
+    // params.spaceId = props.spaceId;
     // 3. 调用接口
     // 关键点：通过 options 覆盖默认的 Content-Type，确保发送 multipart/form-data
     // Axios 会自动处理 boundary，所以这里指定类型即可，或者留空让 Axios 自动推断（但为了对抗生成代码的 json 头，显式指定更安全）
