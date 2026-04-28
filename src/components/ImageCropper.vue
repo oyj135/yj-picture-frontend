@@ -1,5 +1,11 @@
 <template>
-  <a-modal class="image-cropper" v-model:visible="visible" title="编辑图片" :footer="false" @cancel="closeModal">
+  <a-modal
+    class="image-cropper"
+    v-model:visible="visible"
+    title="编辑图片"
+    :footer="false"
+    @cancel="closeModal"
+  >
     <!-- 图片裁剪器 -->
     <vue-cropper
       ref="cropperRef"
@@ -74,6 +80,7 @@ const closeModal = () => {
 
 defineExpose({
   openModal,
+  closeModal,
 })
 
 const loading = ref<boolean>(false)
@@ -102,24 +109,19 @@ const handleUpload = async ({ file }: any) => {
 
     // 2. 构造符合 API 定义的 params 参数
     // 根据 typings.d.ts，uploadPictureParams 需要包含 pictureUploadRequest 对象
-    // 关键修复：编辑已有图片时（有id），不传spaceId，避免空间冲突
     const params: API.uploadPictureParams = {
       pictureUploadRequest: {
         id: props.picture?.id,
-      }
+      },
     }
     // 3. 调用接口
     // 关键点：通过 options 覆盖默认的 Content-Type，确保发送 multipart/form-data
     // Axios 会自动处理 boundary，所以这里指定类型即可，或者留空让 Axios 自动推断（但为了对抗生成代码的 json 头，显式指定更安全）
-    const res = await uploadPicture(
-      params, 
-      formData as any, 
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-    )
+    const res = await uploadPicture(params, formData as any, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
 
     if (res.data.code === 0 && res.data.data) {
       message.success('图片上传成功')

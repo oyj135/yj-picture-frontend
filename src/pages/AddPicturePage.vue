@@ -236,6 +236,8 @@ const doEditPicture = () => {
 // 编辑成功事件
 const onCropSuccess = (newPicture: API.PictureVO) => {
   picture.value = newPicture
+  // 关闭弹窗
+  imageCropperRef.value.closeModal()
 }
 
 // AI 扩图弹窗引用

@@ -16,13 +16,22 @@
                 <UserOutlined />
               </template>
             </a-avatar>
-            <a-upload
-              :show-upload-list="false"
-              :custom-request="handleAvatarUpload"
-              :before-upload="beforeUpload"
-            >
-              <a-button :loading="uploading">上传头像</a-button>
-            </a-upload>
+            <a-space>
+              <a-upload
+                :show-upload-list="false"
+                :custom-request="handleAvatarUpload"
+                :before-upload="beforeUpload"
+              >
+                <a-button :loading="uploading">上传新头像</a-button>
+              </a-upload>
+              <a-button 
+                v-if="profileForm.userAvatar" 
+                :icon="h(EditOutlined)" 
+                @click="doEditAvatar"
+              >
+                编辑头像
+              </a-button>
+            </a-space>
           </a-space>
         </a-form-item>
         <a-form-item label="用户名" name="userName">
@@ -47,74 +56,31 @@
         </a-form-item>
       </a-form>
     </a-card>
-    <a-modal
-      v-model:open="cropModalOpen"
-      title="选择头像区域"
-      ok-text="确认上传"
-      cancel-text="取消"
-      :confirm-loading="uploading"
-      @ok="confirmCropUpload"
-      @cancel="cancelCropUpload"
-    >
-      <div class="cropper-wrapper">
-        <div class="crop-preview">
-          <img
-            v-if="cropImageUrl"
-            :src="cropImageUrl"
-            class="crop-image"
-            :style="cropImageStyle"
-            alt="裁剪预览"
-          />
-        </div>
-        <a-typography-text type="secondary">拖动下方滑块选择头像显示范围</a-typography-text>
-        <div class="slider-item">
-          <span>缩放</span>
-          <a-slider v-model:value="cropState.scale" :min="1" :max="3" :step="0.01" />
-        </div>
-        <div class="slider-item">
-          <span>左右</span>
-          <a-slider v-model:value="cropState.offsetX" :min="-120" :max="120" :step="1" />
-        </div>
-        <div class="slider-item">
-          <span>上下</span>
-          <a-slider v-model:value="cropState.offsetY" :min="-120" :max="120" :step="1" />
-        </div>
-      </div>
-    </a-modal>
+
+    <!-- 复用 ImageCropper 组件 -->
+    <ImageCropper
+      ref="imageCropperRef"
+      :imageUrl="profileForm.userAvatar"
+      :onSuccess="onCropSuccess"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { h, onMounted, reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import type { RcFile, UploadRequestOption as RcCustomRequestOptions } from 'ant-design-vue/es/vc-upload/interface'
-import { UserOutlined } from '@ant-design/icons-vue'
+import { UserOutlined, EditOutlined } from '@ant-design/icons-vue'
 import { getLoginUser, updateUser } from '@/api/userController'
 import { uploadPicture } from '@/api/pictureController'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
+import ImageCropper from '@/components/ImageCropper.vue'
 
 const loginUserStore = useLoginUserStore()
 
 const uploading = ref(false)
 const saving = ref(false)
-const cropModalOpen = ref(false)
-const cropImageUrl = ref('')
-const cropState = reactive({
-  scale: 1,
-  offsetX: 0,
-  offsetY: 0,
-})
-const cropMeta = reactive({
-  naturalWidth: 0,
-  naturalHeight: 0,
-  baseWidth: 240,
-  baseHeight: 240,
-})
-const cropSourceFile = ref<File | null>(null)
-const uploadCallbacks = ref<{
-  onSuccess?: RcCustomRequestOptions['onSuccess']
-  onError?: RcCustomRequestOptions['onError']
-} | null>(null)
+const imageCropperRef = ref()
 
 const profileForm = reactive<API.UserUpdateRequest>({
   userName: '',
@@ -152,147 +118,88 @@ const beforeUpload = (file: RcFile) => {
   return true
 }
 
-const handleAvatarUpload = async (options: RcCustomRequestOptions) => {
-  const { file, onSuccess, onError } = options
-  const rawFile = file as File
-  const imageMeta = await getImageMeta(rawFile)
-  if (!imageMeta) {
-    onError?.(new Error('读取图片失败') as any)
-    return
-  }
-  cropSourceFile.value = rawFile
-  uploadCallbacks.value = { onSuccess, onError }
-  cropImageUrl.value = imageMeta.url
-  cropMeta.naturalWidth = imageMeta.width
-  cropMeta.naturalHeight = imageMeta.height
-  const baseSize = 240
-  const imageRatio = imageMeta.width / imageMeta.height
-  if (imageRatio >= 1) {
-    cropMeta.baseHeight = baseSize
-    cropMeta.baseWidth = baseSize * imageRatio
-  } else {
-    cropMeta.baseWidth = baseSize
-    cropMeta.baseHeight = baseSize / imageRatio
-  }
-  cropState.scale = 1
-  cropState.offsetX = 0
-  cropState.offsetY = 0
-  cropModalOpen.value = true
-}
-
-const getImageMeta = async (file: File) => {
-  const imageUrl = URL.createObjectURL(file)
-  const image = new Image()
-  image.src = imageUrl
-  try {
-    await new Promise<void>((resolve, reject) => {
-      image.onload = () => resolve()
-      image.onerror = reject
-    })
-    return {
-      url: imageUrl,
-      width: image.naturalWidth || image.width,
-      height: image.naturalHeight || image.height,
-    }
-  } catch (e) {
-    URL.revokeObjectURL(imageUrl)
-    return null
-  }
-}
-
-const cropImageStyle = computed(() => {
-  const width = cropMeta.baseWidth * cropState.scale
-  const height = cropMeta.baseHeight * cropState.scale
-  return {
-    width: `${width}px`,
-    height: `${height}px`,
-    transform: `translate(${cropState.offsetX}px, ${cropState.offsetY}px)`,
-  }
-})
-
-const makeCroppedBlob = async () => {
-  if (!cropSourceFile.value) {
-    return null
-  }
-  const image = new Image()
-  image.src = cropImageUrl.value
-  await new Promise<void>((resolve, reject) => {
-    image.onload = () => resolve()
-    image.onerror = reject
-  })
-  const canvas = document.createElement('canvas')
-  const outputSize = 512
-  canvas.width = outputSize
-  canvas.height = outputSize
-  const ctx = canvas.getContext('2d')
-  if (!ctx) {
-    return null
-  }
-  const previewSize = 240
-  const factor = outputSize / previewSize
-  const drawWidth = cropMeta.baseWidth * cropState.scale * factor
-  const drawHeight = cropMeta.baseHeight * cropState.scale * factor
-  const centerX = outputSize / 2 + cropState.offsetX * factor
-  const centerY = outputSize / 2 + cropState.offsetY * factor
-  const drawX = centerX - drawWidth / 2
-  const drawY = centerY - drawHeight / 2
-  ctx.clearRect(0, 0, outputSize, outputSize)
-  ctx.drawImage(image, drawX, drawY, drawWidth, drawHeight)
-  return await new Promise<Blob | null>((resolve) => {
-    canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.92)
-  })
-}
-
-const confirmCropUpload = async () => {
-  if (!cropSourceFile.value) {
-    return
-  }
+// 处理头像上传（新建）
+const handleAvatarUpload = async ({ file, onSuccess, onError }: RcCustomRequestOptions) => {
   uploading.value = true
   try {
-    const croppedBlob = await makeCroppedBlob()
-    if (!croppedBlob) {
-      throw new Error('头像裁剪失败')
-    }
     const formData = new FormData()
-    formData.append('file', croppedBlob, cropSourceFile.value.name || 'avatar.jpg')
+    formData.append('file', file as Blob)
+    
     const params: API.uploadPictureParams = {
-      pictureUploadRequest: {},
+      pictureUploadRequest: {}
     }
+    
     const res = await uploadPicture(params, formData as any, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      headers: { 'Content-Type': 'multipart/form-data' },
     })
+    
     if (res.data.code === 0 && res.data.data) {
-      profileForm.userAvatar = res.data.data.url ?? ''
+      const avatarUrl = res.data.data.url ?? ''
+      profileForm.userAvatar = avatarUrl
+      
+      // 立即保存到 user 表
+      await saveAvatarToDatabase(avatarUrl)
+      
       message.success('头像上传成功')
-      uploadCallbacks.value?.onSuccess?.(res.data, cropSourceFile.value as any)
-      cropModalOpen.value = false
-      cleanupCropData()
+      onSuccess?.(res.data, file as any)
     } else {
-      const error = new Error(res.data.message || '头像上传失败')
-      message.error(error.message)
-      uploadCallbacks.value?.onError?.(error as any)
+      throw new Error(res.data.message || '头像上传失败')
     }
   } catch (e: any) {
-    message.error('头像上传失败：' + (e?.message || '网络错误'))
-    uploadCallbacks.value?.onError?.(e)
+    message.error(e.message || '头像上传失败')
+    onError?.(e)
   } finally {
     uploading.value = false
   }
 }
 
-const cleanupCropData = () => {
-  if (cropImageUrl.value.startsWith('blob:')) {
-    URL.revokeObjectURL(cropImageUrl.value)
+// 保存头像到数据库
+const saveAvatarToDatabase = async (avatarUrl: string) => {
+  const userId = loginUserStore.loginUser.id
+  if (!userId) {
+    throw new Error('当前未登录')
   }
-  cropImageUrl.value = ''
-  cropSourceFile.value = null
-  uploadCallbacks.value = null
+  
+  const res = await updateUser({
+    id: userId,
+    userAvatar: avatarUrl,
+  })
+  
+  if (res.data.code !== 0) {
+    throw new Error(res.data.message || '保存头像失败')
+  }
+  
+  // 更新 store 中的用户信息
+  await loadProfile()
 }
 
-const cancelCropUpload = () => {
-  cleanupCropData()
+// 裁剪成功回调
+const onCropSuccess = async (newPicture: API.PictureVO) => {
+  if (newPicture?.url) {
+    try {
+      const avatarUrl = newPicture.url
+      profileForm.userAvatar = avatarUrl
+      
+      // 立即保存到 user 表
+      await saveAvatarToDatabase(avatarUrl)
+      
+      message.success('头像更新成功')
+    } catch (error: any) {
+      message.error(error.message || '头像更新失败')
+    }
+  }
+  
+  // 关闭裁剪弹窗
+  if (imageCropperRef.value) {
+    imageCropperRef.value.closeModal()
+  }
+}
+
+// 打开编辑头像弹窗
+const doEditAvatar = () => {
+  if (imageCropperRef.value) {
+    imageCropperRef.value.openModal()
+  }
 }
 
 const handleSubmit = async () => {
@@ -354,18 +261,6 @@ onMounted(() => {
   color: #334155;
 }
 
-#profilePage :deep(.ant-input),
-#profilePage :deep(.ant-input-affix-wrapper),
-#profilePage :deep(.ant-input-textarea),
-#profilePage :deep(.ant-btn) {
-  border-radius: 10px;
-}
-
-#profilePage :deep(.ant-btn-primary) {
-  min-width: 120px;
-  font-weight: 600;
-}
-
 .avatar-preview {
   width: 96px;
   height: 96px;
@@ -373,63 +268,5 @@ onMounted(() => {
   object-fit: cover;
   border: 2px solid #e2e8f0;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.18);
-}
-
-.cropper-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding-top: 4px;
-}
-
-.crop-preview {
-  width: 240px;
-  height: 240px;
-  margin: 0 auto;
-  border-radius: 50%;
-  border: 2px solid #dbeafe;
-  overflow: hidden;
-  background:
-    linear-gradient(45deg, #f8fafc 25%, transparent 25%),
-    linear-gradient(-45deg, #f8fafc 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #f8fafc 75%),
-    linear-gradient(-45deg, transparent 75%, #f8fafc 75%);
-  background-size: 16px 16px;
-  background-position:
-    0 0,
-    0 8px,
-    8px -8px,
-    -8px 0;
-  position: relative;
-  box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.15);
-}
-
-.crop-image {
-  width: 240px;
-  height: 240px;
-  object-fit: cover;
-  transform-origin: center center;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  margin-left: -120px;
-  margin-top: -120px;
-}
-
-.slider-item {
-  display: grid;
-  grid-template-columns: 44px 1fr;
-  align-items: center;
-  column-gap: 12px;
-}
-
-.slider-item span {
-  color: #64748b;
-  font-size: 13px;
-}
-
-:deep(.ant-modal .ant-modal-content) {
-  border-radius: 14px;
-  overflow: hidden;
 }
 </style>
