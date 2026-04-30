@@ -39,6 +39,11 @@ const originItems = [
     title: '空间管理',
   },
   {
+    key: '/user_exchange_vip',
+    label: '兑换会员',
+    title: '兑换会员',
+  },
+  {
     key: 'others',
     label: h('a', { href: 'https://blog.ouyangjian.com', target: '_blank' }, 'My Blog'),
     title: 'My Blog',

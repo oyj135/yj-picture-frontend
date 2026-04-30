@@ -662,6 +662,9 @@ declare namespace API {
     userAvatar?: string
     userProfile?: string
     userRole?: string
+    vipExpireTime?: string
+    vipCode?: string
+    vipNumber?: number
     editTime?: string
     createTime?: string
     updateTime?: string
@@ -714,6 +717,13 @@ declare namespace API {
     userAvatar?: string
     userProfile?: string
     userRole?: string
+    vipExpireTime?: string
+    vipCode?: string
+    vipNumber?: number
     createTime?: string
+  }
+
+  type VipExchangeRequest = {
+    vipCode?: string
   }
 }
