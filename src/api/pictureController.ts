@@ -179,6 +179,21 @@ export async function searchPictureByColor(
   })
 }
 
+/** 此处后端没有提供注释 POST /picture/search/picture */
+export async function searchPictureByPicture(
+  body: API.SearchPictureByPictureRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseListImageSearchResult>('/picture/search/picture', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** 此处后端没有提供注释 GET /picture/tag_category */
 export async function listPictureTagCategory(options?: { [key: string]: any }) {
   return request<API.BaseResponsePictureTagCategory>('/picture/tag_category', {

@@ -1,7 +1,7 @@
 <template>
   <div id="addspacePage">
     <h2 style="margin-bottom: 16px">
-      {{ route.query?.id ? '修改空间' : '创建空间' }}
+      {{ route.query?.id ? '修改空间' : '创建空间' }}{{ SPACE_TYPE_MAP[spaceTyep] }}
     </h2>
     <!-- 空间信息表单 -->
     <a-form layout="vertical" :model="formData" @finish="handleSubmit">
@@ -39,10 +39,10 @@
 
 <script setup lang="ts">
 import { addSpace, getSpaceVoById, listSpaceLevel, updateSpace } from '@/api/spaceController'
-import { SPACE_LEVEL_ENUM, SPACE_LEVEL_OPTIONS } from '@/constants/space'
+import { SPACE_LEVEL_ENUM, SPACE_LEVEL_OPTIONS, SPACE_TYPE_ENUM, SPACE_TYPE_MAP } from '@/constants/space'
 import { formatSize } from '@/utils'
 import { message } from 'ant-design-vue'
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
@@ -51,6 +51,15 @@ const formData = reactive<API.SpaceAddRequest | API.SpaceUpdateRequest>({
   spaceLevel: SPACE_LEVEL_ENUM.COMMON,
 })
 const loading = ref(false)
+
+// 空间类别，默认为私有空间
+const spaceTyep = computed(() => {
+  if (route.query?.type) {
+    return Number(route.query?.type)
+  } else {
+      return SPACE_TYPE_ENUM.PRIVATE
+  }
+})
 
 /**
  * 提交表单
@@ -70,6 +79,7 @@ const handleSubmit = async (values: any) => {
     // 创建
     res = await addSpace({
       ...formData,
+      spaceType: spaceTyep.value,
     })
   }
   if (res.data.code === 0 && res.data.data) {
@@ -125,8 +135,6 @@ const fetchSpaceLevelList = async () => {
 onMounted(() => {
   fetchSpaceLevelList()
 })
-
-
 
 </script>
 

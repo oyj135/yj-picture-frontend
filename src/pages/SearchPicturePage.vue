@@ -31,8 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { searchPictureByPicture } from '@/api/fileController'
-import { getPictureVoById } from '@/api/pictureController'
+import { getPictureVoById, searchPictureByPicture } from '@/api/pictureController'
 import { message } from 'ant-design-vue'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'

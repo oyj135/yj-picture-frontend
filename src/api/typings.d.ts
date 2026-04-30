@@ -71,6 +71,12 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponseListSpaceUserVO = {
+    code?: number
+    data?: SpaceUserVO[]
+    message?: string
+  }
+
   type BaseResponseLoginUserVO = {
     code?: number
     data?: LoginUserVO
@@ -140,6 +146,12 @@ declare namespace API {
   type BaseResponseSpaceUsageAnalyzeResponse = {
     code?: number
     data?: SpaceUsageAnalyzeResponse
+    message?: string
+  }
+
+  type BaseResponseSpaceUser = {
+    code?: number
+    data?: SpaceUser
     message?: string
   }
 
@@ -323,8 +335,6 @@ declare namespace API {
     bestQuality?: boolean
     limitImageSize?: boolean
     addWatermark?: boolean
-    yscale?: number
-    xscale?: number
     xScale?: number
     yScale?: number
   }
@@ -449,6 +459,7 @@ declare namespace API {
     user?: UserVO
     spaceId?: number
     picColor?: string
+    permissionList?: string[]
   }
 
   type SearchPictureByColorRequest = {
@@ -473,11 +484,13 @@ declare namespace API {
     editTime?: string
     updateTime?: string
     isDelete?: number
+    spaceType?: number
   }
 
   type SpaceAddRequest = {
     spaceName?: string
     spaceLevel?: number
+    spaceType?: number
   }
 
   type SpaceCategoryAnalyzeRequest = {
@@ -513,6 +526,7 @@ declare namespace API {
     userId?: number
     spaceName?: string
     spaceLevel?: number
+    spaceType?: number
   }
 
   type SpaceRankAnalyzeRequest = {
@@ -564,6 +578,21 @@ declare namespace API {
     countUsageRatio?: number
   }
 
+  type SpaceUser = {
+    id?: number
+    spaceId?: number
+    userId?: number
+    spaceRole?: string
+    createTime?: string
+    updateTime?: string
+  }
+
+  type SpaceUserAddRequest = {
+    spaceId?: number
+    userId?: number
+    spaceRole?: string
+  }
+
   type SpaceUserAnalyzeRequest = {
     spaceId?: number
     queryPublic?: boolean
@@ -575,6 +604,29 @@ declare namespace API {
   type SpaceUserAnalyzeResponse = {
     period?: string
     count?: number
+  }
+
+  type SpaceUserEditRequest = {
+    id?: number
+    spaceRole?: string
+  }
+
+  type SpaceUserQueryRequest = {
+    id?: number
+    spaceId?: number
+    userId?: number
+    spaceRole?: string
+  }
+
+  type SpaceUserVO = {
+    id?: number
+    spaceId?: number
+    userId?: number
+    spaceRole?: string
+    createTime?: string
+    updateTime?: string
+    user?: UserVO
+    space?: SpaceVO
   }
 
   type SpaceVO = {
@@ -590,6 +642,8 @@ declare namespace API {
     editTime?: string
     updateTime?: string
     user?: UserVO
+    spaceType?: number
+    permissionList?: string[]
   }
 
   type testDownloadFileParams = {
