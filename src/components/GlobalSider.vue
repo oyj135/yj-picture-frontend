@@ -56,7 +56,10 @@ const menuItems = computed(() => {
 const fetchTeamSpaceList = async () => {
   const res = await listMyTeamSpace()
   if (res.data.code === 0 && res.data.data) {
-    teamSpaceList.value = res.data.data
+    // 过滤出团队空间（spaceType === 1）
+    teamSpaceList.value = res.data.data.filter(spaceUser => 
+      spaceUser.space?.spaceType === SPACE_TYPE_ENUM.TEAM
+    )
   } else {
     message.error('加载我的团队空间失败，' + res.data.message)
   }

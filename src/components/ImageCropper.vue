@@ -23,7 +23,7 @@
     <!-- 协同编辑操作 -->
     <div class="image-edit-actions" v-if="isTeamSpace">
       <a-space>
-        <a-button v-if="editingUser" disabled> {{ editingUser.userName }}正在编辑</a-button>
+        <a-button v-if="editingUser" disabled class="editing-user-btn"> {{ editingUser.userName }}正在编辑</a-button>
         <a-button v-if="canEnterEdit" type="primary" ghost @click="enterEdit">进入编辑</a-button>
         <a-button v-if="canExitEdit" danger ghost @click="exitEdit">退出编辑</a-button>
       </a-space>
@@ -315,5 +315,21 @@ const editAction = (action: string) => {
 
 .image-cropper .vue-cropper {
   height: 400px;
+}
+
+.image-edit-actions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.editing-user-btn {
+  color: #ff4d4f;
+  border-color: #ff4d4f;
+}
+
+.image-cropper-actions {
+  display: flex;
+  justify-content: center;
 }
 </style>

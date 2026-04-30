@@ -71,7 +71,7 @@ import { h, onMounted, reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import type { RcFile, UploadRequestOption as RcCustomRequestOptions } from 'ant-design-vue/es/vc-upload/interface'
 import { UserOutlined, EditOutlined } from '@ant-design/icons-vue'
-import { getLoginUser, updateUser } from '@/api/userController'
+import { getLoginUser, updateMyUser, updateUser } from '@/api/userController'
 import { uploadPicture } from '@/api/pictureController'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
 import ImageCropper from '@/components/ImageCropper.vue'
@@ -155,13 +155,7 @@ const handleAvatarUpload = async ({ file, onSuccess, onError }: RcCustomRequestO
 
 // 保存头像到数据库
 const saveAvatarToDatabase = async (avatarUrl: string) => {
-  const userId = loginUserStore.loginUser.id
-  if (!userId) {
-    throw new Error('当前未登录')
-  }
-  
-  const res = await updateUser({
-    id: userId,
+  const res = await updateMyUser({
     userAvatar: avatarUrl,
   })
   
@@ -203,15 +197,9 @@ const doEditAvatar = () => {
 }
 
 const handleSubmit = async () => {
-  const userId = loginUserStore.loginUser.id
-  if (!userId) {
-    message.error('当前未登录')
-    return
-  }
   saving.value = true
   try {
-    const res = await updateUser({
-      id: userId,
+    const res = await updateMyUser({
       userName: profileForm.userName,
       userAvatar: profileForm.userAvatar,
       userProfile: profileForm.userProfile,

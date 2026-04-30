@@ -10,7 +10,7 @@ import { ColorPicker } from 'vue3-colorpicker'
 import 'vue3-colorpicker/style.css'
 import BatchEditPictureModel from '@/components/BatchEditPictureModel.vue'
 import { BarChartOutlined, EditOutlined, TeamOutlined } from '@ant-design/icons-vue'
-import { SPACE_PERMISSION_ENUM, SPACE_TYPE_MAP } from '@/constants/space'
+import { SPACE_PERMISSION_ENUM, SPACE_TYPE_ENUM, SPACE_TYPE_MAP } from '@/constants/space'
 
 interface Props {
   id: string | number
@@ -180,7 +180,7 @@ watch(
         >
           空间分析
         </a-button>
-        <a-button v-if="canManageSpaceUser"
+        <a-button v-if="canManageSpaceUser && space.spaceType === SPACE_TYPE_ENUM.TEAM"
           type="primary"
           ghost
           :icon="h(TeamOutlined)"
