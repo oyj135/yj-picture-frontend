@@ -9,7 +9,7 @@ import { computed, h, onMounted, ref } from 'vue'
 import { ColorPicker } from 'vue3-colorpicker'
 import 'vue3-colorpicker/style.css'
 import BatchEditPictureModel from '@/components/BatchEditPictureModel.vue'
-import { EditOutlined } from '@ant-design/icons-vue'
+import { BarChartOutlined, EditOutlined } from '@ant-design/icons-vue'
 
 interface Props {
   id: string | number
@@ -148,6 +148,16 @@ const doBatchEdit = () => {
     <a-flex justify="space-between" class="header-row">
       <h2 class="page-title">{{ space.spaceName }}（私有空间）</h2>
       <a-space size="middle">
+        <a-button
+          type="primary"
+          ghost
+          :icon="h(BarChartOutlined)"
+          :href="`/space_analyze?spaceId=${id}`"
+          target="_blank"
+        >
+          空间分析
+        </a-button>
+
         <a-button type="primary" :href="`/add_picture?spaceId=${id}`" target="_blank">
           + 创建图片
         </a-button>
