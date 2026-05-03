@@ -469,6 +469,7 @@ declare namespace API {
 
   type SearchPictureByPictureRequest = {
     pictureId?: number
+    id?: number
   }
 
   type Space = {

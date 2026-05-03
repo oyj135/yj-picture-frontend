@@ -37,7 +37,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const queryPictureId = computed(() => Number(route.query?.pictureId || 0))
+const queryPictureId = computed(() => route.query?.pictureId)
 
 // 图片 id
 const pictureId = computed(() => {
